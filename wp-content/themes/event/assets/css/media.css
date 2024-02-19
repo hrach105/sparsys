@@ -1,0 +1,5 @@
+@media(max-width: 1441px) {
+    .banner .banner-content {
+        max-width: 1280px;
+    }
+}
