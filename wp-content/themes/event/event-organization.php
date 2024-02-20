@@ -3,7 +3,9 @@
 <?php get_header(); ?>
 
     <div class="banner" style="background-image: url('<?= the_field('banner_image') ?>')">
-       <div class="banner-content">
+        <img class="banner-overlay" src="<?= get_template_directory_uri(). '/assets/images/banner-overlay.png' ?>" alt="">
+
+        <div class="banner-content">
            <img src="<?php the_field('banner_title') ?>" title="" alt="event organization">
            <p><?php the_field('banner_description') ?></p>
        </div>
@@ -11,53 +13,56 @@
 
     <section class="sliders">
         <div class="main-container">
-
             <div class="boxes">
-                <div class="box1 box"></div>
-                <div class="box2 box"></div>
-                <div class="box3 box"></div>
-            </div>
+
+                <?php
+                $args = array(
+                    'post_type' => 'sliders',
+                    'order' => 'ASC'
+                );
+                $slider_query = new WP_Query($args);
+
+                if ($slider_query->have_posts()) {
+                    while ($slider_query->have_posts()) {
+                        $slider_query->the_post();
+                        ?>
+                        <div class="box">
+                            <?php if (have_rows('slides')) : ?>
+                                <div id="carouselExampleControls-<?php echo get_the_ID(); ?>" class="carousel slide" data-ride="carousel">
+                                    <div class="carousel-inner">
+                                        <?php $first = true; ?>
+                                        <?php while (have_rows('slides')) : the_row();
+                                            $image = get_sub_field('background_image');
+                                            $name = get_sub_field('slider_name'); ?>
+                                            <div class="carousel-item <?php echo $first ? 'active' : ''; ?>" style="background: url('<?php echo esc_url($image); ?>')">
+                                                <h4><?php echo esc_html($name); ?></h4>
+                                                <div class="overlay"></div>
+                                            </div>
+                                            <?php $first = false; ?>
+                                        <?php endwhile; ?>
+                                    </div>
+                                    <a class="carousel-control-prev" href="#carouselExampleControls-<?php echo get_the_ID(); ?>" role="button" data-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next" href="#carouselExampleControls-<?php echo get_the_ID(); ?>" role="button" data-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </div>
+                            <?php else : ?>
+                                <p>No sliders found for this post.</p>
+                            <?php endif; ?>
+                        </div>
+                        <?php
+                    }
+                    wp_reset_postdata();
+                } else {
+                    echo 'No sliders found';
+                }
+                ?>
 
 
-            <div class="slider full-width">
-                <div class="slider-item" style="background-image: url('<?= get_template_directory_uri().'/assets/images/slider-img1.png' ?>')">
-                    <h4>SMM</h4>
-                </div>
-                <div class="slider-item" style="background-image: url('<?= get_template_directory_uri().'/assets/images/slider-img.png' ?>')">
-                    <h4>SMM</h4>
-                </div>
-                <div class="slider-item" style="background-image: url('<?= get_template_directory_uri().'/assets/images/slider-img.png' ?>')">
-                    <h4>SMM</h4>
-                </div>
-            </div>
-            <div class="slider-wrapper">
-                <div class="slider-wrapper-item">
-                    <div class="slider">
-                        <div class="slider-item" style="background-image: url('<?= get_template_directory_uri().'/assets/images/slider-img1.png' ?>')">
-                            <h4>SMM</h4>
-                        </div>
-                        <div class="slider-item" style="background-image: url('<?= get_template_directory_uri().'/assets/images/slider-img.png' ?>')">
-                            <h4>SMM</h4>
-                        </div>
-                        <div class="slider-item" style="background-image: url('<?= get_template_directory_uri().'/assets/images/slider-img.png' ?>')">
-                            <h4>SMM</h4>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="slider-wrapper-item">
-                    <div class="slider">
-                        <div class="slider-item" style="background-image: url('<?= get_template_directory_uri().'/assets/images/slider-img1.png' ?>')">
-                            <h4>SMM</h4>
-                        </div>
-                        <div class="slider-item" style="background-image: url('<?= get_template_directory_uri().'/assets/images/slider-img.png' ?>')">
-                            <h4>SMM</h4>
-                        </div>
-                        <div class="slider-item" style="background-image: url('<?= get_template_directory_uri().'/assets/images/slider-img.png' ?>')">
-                            <h4>SMM</h4>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
